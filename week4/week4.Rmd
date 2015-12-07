@@ -1,0 +1,54 @@
+---
+title: "week4"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+##Question 1
+```{r}
+data1<-read.csv("data1.csv")
+a<-names(data1)
+strsplit(a,"wgtp")[123]
+```
+
+##Question 2
+```{r, echo=FALSE}
+GDP<-read.csv("GDP.csv",skip=5,header=F,nrow=190)
+GDP<-GDP[,c(1,2,4,5)]
+names(GDP)<-c("CountryCode","ranking","Long.Name","GDP")
+mean(as.numeric(gsub(",","",GDP$GDP)))
+```
+
+
+##Question 3
+```{r}
+countryNames<-GDP$Long.Name
+grep("^United",countryNames)
+```
+
+
+##Question 4
+```{r}
+library(dplyr)
+GDP<-read.csv("GDP.csv",skip=5,header=F,nrow=190)
+GDP<-GDP[,c(1,2,4,5)]
+names(GDP)<-c("CountryCode","ranking","Long.Name","GDP")
+
+edu<-read.csv("edu.csv")
+data2<-inner_join(GDP,edu,by="CountryCode")
+isFiscalYearEnd <- grepl("fiscal year end", tolower(data2$Special.Notes))
+isJune <- grepl("june", tolower(data2$Special.Notes))
+table(isFiscalYearEnd,isJune)
+```
+
+
+##Question 5
+```{r}
+library(quantmod)
+amzn = getSymbols("AMZN",auto.assign=FALSE)
+sampleTimes = index(amzn)
+sample<- as.Date(sampleTimes, "%Y%m%d")
+addmargins(table(substr(sampleTimes,1,4),weekdays(sample)))
+```
+

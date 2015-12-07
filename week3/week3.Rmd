@@ -1,0 +1,53 @@
+---
+title: "week3"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+##Question 1
+```{r,echo=TRUE}
+data1<-read.csv("data1.csv")
+agricultureLogica<-(data1$ACR==3) & (data1$AGS==6)
+head(which(agricultureLogica==TRUE),3)
+```
+
+
+##Question 2
+```{r}
+#由于利用download.file下载图片有问题，所以利用本地下载进行处理图片
+library(jpeg)
+img<-readJPEG("jeff.jpg",native=T)
+quantile(img,probs=c(0.3,0.8))
+```
+
+
+##Question 3
+```{r,results='hide'}
+library(dplyr)
+GDP<-read.csv("GDP.csv",skip=5,header=F,nrow=190)
+GDP<-GDP[,c(1,2,4,5)]
+names(GDP)<-c("CountryCode","ranking","Long.Name","GDP")
+
+edu<-read.csv("edu.csv")
+data2<-inner_join(GDP,edu,by="CountryCode")
+dim(data2)[1]
+data3<-arrange(data2,desc(ranking))
+data3[13,]$Long.Name.x
+```
+
+
+##Question 4
+```{r}
+#题目3中的得到的data2为最终合并结果，本题目以及下一个题目就是以此为基础进行的
+tapply(data2$ranking,data2$Income.Group,mean)
+```
+
+##Question 5
+```{r}
+data2$ranking1<-cut(data2$ranking,breaks=quantile(data2$ranking,probs=c(0,0.2,0.4,0.6,0.8,1),na.rm=T))
+table(data2$Income.Group,data2$ranking1)
+```
+
+
+
